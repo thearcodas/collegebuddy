@@ -7,13 +7,13 @@ from django.contrib.auth.models import User,AbstractUser
 class Student(models.Model):
     roll_no = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
     name = models.CharField(max_length=20,default='Anonymous')
-    semester = models.CharField(max_length=20)
-    specialisation = models.CharField(max_length=50)
+    semester = models.IntegerField()
+    stream= models.ForeignKey('Stream' , on_delete=models.SET_NULL, blank=True, null=True, related_name='stream')
     phone_no = models.CharField(max_length=20)
     facebook_link = models.URLField(blank=True, null=True)
     instagram_link = models.URLField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    profile_pic = models.ImageField(upload_to='media/student_profile_pics/', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='student_profile_pics/', blank=True, null=True)
     enrolled_courses = models.ManyToManyField('Course', related_name='enrolled_students')
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Professor(models.Model):
     professor_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name='professor_profile')
     name = models.CharField(max_length=20, default='Anonymous')
     phone_no = models.CharField(max_length=20)
-    profile_pic = models.ImageField(upload_to='media/professor_profile_pics/', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='professor_profile_pics/', blank=True, null=True)
     highest_qualification = models.CharField(max_length=50)
     department = models.ForeignKey('Department', on_delete=models.SET_NULL, blank=True, null=True, related_name='professors')
     courses_taught = models.ManyToManyField('Course', related_name='instructors')
@@ -32,22 +32,26 @@ class Professor(models.Model):
     def __str__(self):
         return self.name
 
-
 class Course(models.Model):
     course_id = models.CharField(max_length=20)
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    #professor_assigned = models.ManyToManyField(Professor, related_name='taught_courses')
+    
 
     def __str__(self):
         return self.name
 
-
+class Stream(models.Model):
+    code= models.CharField(max_length=10)
+    name= models.CharField(max_length=50)
+    department=models.ForeignKey('Department', on_delete=models.SET_NULL, blank=True, null=True, related_name='department')
+    
+    def __str__(self):
+        return self.name
+        
 class Department(models.Model):
     name = models.CharField(max_length=50)
     hod = models.OneToOneField(Professor, on_delete=models.SET_NULL, blank=True, null=True, related_name='department_head')
-    specialisations = models.CharField(max_length=50)
-
     def __str__(self):
         return self.name
 

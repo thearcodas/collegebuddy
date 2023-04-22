@@ -4,7 +4,7 @@ from dashboard.models import *
 # Register your models here.
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'roll_no', 'semester', 'specialisation', 'phone_no')
+    list_display = ('name', 'roll_no', 'semester', 'stream',  'phone_no')
 
 @admin.register(Professor)
 class ProfessorAdmin(admin.ModelAdmin):
@@ -33,3 +33,8 @@ class AttendanceAdmin(admin.ModelAdmin):
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
     list_display = ('course', 'date', 'full_marks')
+
+@admin.register(Stream)
+class StreamAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'department')
+

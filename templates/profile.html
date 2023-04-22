@@ -10,96 +10,84 @@
 
 <div class="container">
 
-    {% if is_student %}
-
-      <table class="table">
-        <tr>
-          <td>Name:</td>
-          <td>{{ profile.name }}</td>
-        </tr>
-        <tr>
-          <td>Roll Number:</td>
-          <td>{{ profile.roll_no }}</td>
-        </tr>
-        <tr>
-          <td>Semester:</td>
-          <td>{{ profile.semester }}</td>
-        </tr>
-        <tr>
-          <td>Specialization:</td>
-          <td>{{ profile.specialisation }}</td>
-        </tr>
-        <tr>
-          <td>Phone Number:</td>
-          <td>{{ profile.phone_no }}</td>
-        </tr>
-        <tr>
-          <td>Facebook Link:</td>
-          <td>{{ profile.facebook_link }}</td>
-        </tr>
-        <tr>
-          <td>Instagram Link:</td>
-          <td>{{ profile.instagram_link }}</td>
-        </tr>
-        <tr>
-          <td>Bio:</td>
-          <td>{{ profile.bio }}</td>
-        </tr>
-        <tr>
-          <td>Profile Picture:</td>
-          <td><img src="{{ profile.profile_pic.url }}" alt="Profile Picture"></td>
-        </tr>
-        <tr>
-          <td>Enrolled Courses:</td>
-          <td>
-            <ul>
-            {% for course in user.student_profile.enrolled_courses.all %}
-              <li>{{ course.name }}</li>
-            {% endfor %}
-            </ul>
-          </td>
-        </tr>
-      </table>
-
-    {% else %}
+  <form method="POST" action="profile">
+    {% csrf_token %}
+    <!--common fields-->
+    <div class="form-group">
       
-      <table class="table">
-        <tr>
-          <td>Name:</td>
-          <td>{{ profile.name }}</td>
-        </tr>
-        <tr>
-          <td>Professor ID:</td>
-          <td>{{ profile.professor_id }}</td>
-        </tr>
-        <tr>
-          <td>Department:</td>
-          <td>{{ profile.department }}</td>
-        </tr>
-        <tr>
-          <td>Phone Number:</td>
-          <td>{{ profile.phone_no }}</td>
-        </tr>
-        <tr>
-          <td>Profile Picture:</td>
-          <td><img src="{{ profile.profile_pic.url }}" alt="{{ profile.profile_pic.url }}"></td>
-        </tr>
-        <tr>
-          <td>Highest Qualification:</td>
-          <td>{{ profile.highest_qualification }}</td>
-        </tr>
-        <tr>
-          <td>Courses Teaching:</td>
-          <td>
-            <ul>
-            {% for course in profile.courses_taught.all %}
+      {% if profile.profile_pic %}
+        <center><img src="{{ profile.profile_pic.url }}" width="150" class="img-thumbnail" alt="{{ profile.profile_pic.url }}"></center>
+      {% else %}
+        <img id="profileImage" src="http://lorempixel.com/100/100"  class="img-thumbnail"/>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ profile.name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="phone_number">Phone Number:</label>
+      <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_no }}" required>
+    </div>
+    
+    {% if is_student %}
+      <div class="form-group">
+        <label for="roll_number">Roll Number:</label>
+        <input type="text" class="form-control" id="roll_number" name="roll_number" value="{{ profile.roll_no }}" disabled>
+      </div>
+      <div class="form-group">
+        <label for="semester">Semester:</label>
+        <input type="number" class="form-control" id="semester" name="semester" value="{{ profile.semester }}" disabled>
+      </div>
+      <div class="form-group">
+        <label for="stream">Stream:</label>
+        <input type="text" class="form-control" id="stream" name="stream" value="{{ profile.stream }}" disabled>
+      </div>
+      <div class="form-group">
+          <label for="facebook_link">Facebook Link:</label>
+          <input type="url" class="form-control" id="facebook_link" name="facebook_link" value="{{ profile.facebook_link }}" >
+        </div>
+        <div class="form-group">
+          <label for="instagram_link">Instagram Link:</label>
+          <input type="url" class="form-control" id="instagram_link" name="instagram_link" value="{{ profile.instagram_link }}" >
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio:</label>
+          <textarea class="form-control" id="bio" name="bio" rows="5" >{{profile.bio}}</textarea>
+        </div>
+        <div class="form-group">
+          <label >Enrolled courses:</label>
+          <ul>
+            {% for course in profile.enrolled_courses.all %}
               <li>{{ course.name }}</li>
             {% endfor %}
             </ul>
-          </td>
-        </tr>
-      </table>
+        </div>
+    {% else %}
+      <div class="form-group">
+        <label for="professor_id">Professor ID:</label>
+        <input type="text" class="form-control" id="professor_id" name="professor_id" value="{{ profile.professor_id }}" disabled>
+      </div>
+      <div class="form-group">
+        <label for="highest_qualification">Highest Qualification:</label>
+        <input type="text" class="form-control" id="highest_qualification" name="highest_qualification" value="{{ profile.highest_qualification }}" required>
+      </div>
+      <div class="form-group">
+        <label >Courses taught:</label>
+        <ul>
+          {% for course in profile.courses_taught.all %}
+            <li>{{ course.name }}</li>
+          {% endfor %}
+          </ul>
+      </div>
+      <div class="form-group">
+        <label for="department">Department:</label>
+        <input type="text" class="form-control" id="department" name="department" value="{{ profile.department }}" disabled>
+      </div>
     {% endif %}
-    <a href="#" class="btn btn-primary">Edit Profile</a>
-  </div>
+    <br>
+    <center><button type="submit" class="btn btn-primary" >Save Profile</button></center>
+    <br>
+  </form>
+</div>
 {% endblock body %}

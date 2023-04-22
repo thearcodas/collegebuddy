@@ -52,23 +52,21 @@ def profile(request):
         # Update the profile if the form has been submitted
         if is_student:
             profile.name = request.POST['name']
-            profile.semester = request.POST['semester']
-            profile.specialisation = request.POST['specialisation']
             profile.phone_number = request.POST['phone_number']
             profile.facebook_link = request.POST['facebook_link']
             profile.instagram_link = request.POST['instagram_link']
             profile.bio = request.POST['bio']
-            profile.profile_picture = request.FILES.get('profile_picture', profile.profile_picture)
+            
             profile.save()
         else:
             profile.name = request.POST['name']
             profile.phone_number = request.POST['phone_number']
             profile.highest_qualification = request.POST['highest_qualification']
-            profile.profile_picture = request.FILES.get('profile_picture', profile.profile_picture)
+            
             profile.save()
 
     return render(request, 'profile.html', context)
-
+    
 @login_required(login_url="login")
 def schedules(request):
     return render(request,'schedules.html')
