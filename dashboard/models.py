@@ -57,6 +57,7 @@ class Department(models.Model):
 
 class Announcement(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    id= models.IntegerField(primary_key=True)
     announcement_title = models.CharField(max_length=100)
     announcement_body = models.TextField()
     date_published = models.DateField(auto_now_add=True)

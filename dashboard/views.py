@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-from dashboard.models import Student, Professor
+from dashboard.models import *
 
 # Create your views here
 @login_required(login_url="login")
@@ -37,8 +37,8 @@ def profile(request):
     elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
         profile = Professor.objects.get(professor_id=request.user)
         is_student = False
-    #elif request.user.is_authenticated and request.user.is_admin:
-    #    return HttpResponse("admin dont have profiles")
+    elif request.user.is_authenticated:
+       return HttpResponse("admin dont have profiles")
     else:
         return redirect('login')
 
@@ -72,8 +72,36 @@ def schedules(request):
     return render(request,'schedules.html')
 
 @login_required(login_url="login")
-def notifications(request):
-    return render(request,'notifications.html')
+def announcement(request):
+    #Authentication_Status
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        student = Student.objects.get(roll_no=request.user)
+        announcements = Announcement.objects.filter(department=student.stream.department) 
+        is_student = True
+    elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
+        professor = Professor.objects.get(professor_id=request.user)
+        announcements = Announcement.objects.filter(department=professor.department) 
+        is_student = False
+    elif request.user.is_authenticated:
+       announcements = Announcement.objects.all
+       is_student = False
+    else:
+        return redirect('login')
+    
+     # Display the current profile information
+    context = {
+        'announcements': announcements,
+        'is_student': is_student,
+    }
+    
+    if not is_student:
+        if request.method == 'POST':
+            new_announcement= Announcement.objects.create(department=professor.department,id=request.POST['a_id'],announcement_title=request.POST['a_title'],announcement_body=request.POST['a_body'])
+            new_announcement.save()
+    
+        
+    
+    return render(request,'announcements.html',context)
 
 @login_required(login_url="login")
 def map(request):

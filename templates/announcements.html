@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block announcements %}active{% endblock announcements  %}
+
+{% block title%}Announcements{% endblock title %}
+
+{% block header%}Announcements{% endblock header %}
+
+{% block body %}
+<!--accordian-->
+<div class="accordion" id="announcementsAccordion">
+    {% for announcement in announcements %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="announcement{{ announcement.id }}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ announcement.id }}" aria-expanded="true" aria-controls="collapse{{ announcement.id }}">
+          {{ announcement.announcement_title }}
+        </button>
+      </h2>
+      <div id="collapse{{ announcement.id }}" class="accordion-collapse collapse" aria-labelledby="announcement{{ announcement.id }}" data-bs-parent="#announcementsAccordion">
+        <div class="accordion-body">
+          <p>{{ announcement.announcement_body }}</p><br><br>
+          <p>Posted by <b>{{ announcement.department }} department</b> on <b>{{ announcement.date_published|date:"F d, Y" }}</b></p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <br><br>
+  <!--announce something-->
+  {% if not is_student %}
+  <form method="POST" action="announcement">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="text-center">Announce Something</legend>
+    <div class="form-group">
+      <label for="a_id">Announcement id</label>
+      <input type="text" class="form-control" id="a_id" name="a_id" placeholder="Eg: 1234 " required>
+    </div>
+    <div class="form-group">
+      <label for="a_title">Announcement Title:</label>
+      <input type="text" class="form-control" id="a_title" name="a_title" placeholder="Eg: Class off" required>
+    </div>
+    <div class="form-group">
+      <label for="a_body">Announcement Description:</label>
+      <textarea class="form-control" id="a_body" name="a_body" rows="5" required></textarea>
+    </div>
+    <br>
+    <center><button type="submit" class="btn btn-primary" >Announce</button></center>
+    <br>
+  </fieldset>
+  </form>
+  {% endif %}
+
+{% endblock body %}
