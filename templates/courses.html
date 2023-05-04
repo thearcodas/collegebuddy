@@ -6,4 +6,12 @@
 
 {% block header%}Courses{% endblock header %}
 
-{% block body %}This is courses{% endblock body %}
+{% block body %}
+    <div>
+        {% for course in courses %}
+        <a  class="d-grid gap-2 p-2" href="{% url 'coursedetails' course.course_id %}">
+            <button class="btn btn-light">{{ course.course_id }} - {{ course.name }}</button>
+          </a>
+        {% endfor %}
+        </div>
+{% endblock body %}

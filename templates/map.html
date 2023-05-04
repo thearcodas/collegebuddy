@@ -6,4 +6,7 @@
 
 {% block header%}Map{% endblock header %}
 
-{% block body %}This is map{% endblock body %}
+{% block body %}
+{{map|safe}}
+<br><br>
+{% endblock body %}

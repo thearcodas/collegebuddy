@@ -31,43 +31,43 @@
           <div class="position-sticky pt-0 sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link {% block dashboard %}{% endblock dashboard %}" aria-current="page" href="/">
+                <a class="nav-link {% block dashboard %}{% endblock dashboard %}" aria-current="page" href="{%url 'dashboard' %}">
                   <span data-feather="home" class="align-text-bottom"></span>
                   Dashboard
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block courses %}{% endblock courses %}" href="courses">
+                <a class="nav-link {% block courses %}{% endblock courses %}" href="{%url 'courses' %}">
                   <span data-feather="layers" class="align-text-bottom"></span>
                   Courses
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block map %}{% endblock map %}" href="map">
+                <a class="nav-link {% block map %}{% endblock map %}" href="{%url 'map' %}">
                   <span data-feather="map" class="align-text-bottom"></span>
                   Map
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block profile %}{% endblock profile %}" href="profile">
+                <a class="nav-link {% block profile %}{% endblock profile %}" href="{%url 'profile' %}">
                   <span data-feather="users" class="align-text-bottom"></span>
                   Profile
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block announcements %}{% endblock announcements %}" href="announcement">
+                <a class="nav-link {% block announcements %}{% endblock announcements %}" href="{%url 'announcement' %}">
                   <span data-feather="bar-chart-2" class="align-text-bottom" ></span>
                   Announcements
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block schedules %}{% endblock schedules %}" href="schedules">
+                <a class="nav-link {% block schedules %}{% endblock schedules %}" href="{%url 'schedules' %}">
                   <span data-feather="file" class="align-text-bottom"></span>
                   Schedules
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="logout">
+                <a class="nav-link " href="{%url 'logout' %}">
                   <span data-feather="globe" class="align-text-bottom"></span>
                   Logout
                 </a>

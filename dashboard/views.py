@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from dashboard.models import *
+import folium
+from folium import plugins
+from ipywidgets import *
 
 # Create your views here
 @login_required(login_url="login")
@@ -97,16 +100,60 @@ def announcement(request):
     if not is_student:
         if request.method == 'POST':
             new_announcement= Announcement.objects.create(department=professor.department,id=request.POST['a_id'],announcement_title=request.POST['a_title'],announcement_body=request.POST['a_body'])
-            new_announcement.save()
-    
-        
-    
+            new_announcement.save()  
+            
     return render(request,'announcements.html',context)
 
 @login_required(login_url="login")
 def map(request):
-    return render(request,'map.html')
+    maplocation = (22.5891138440305, 88.37022797671469)
+    m = folium.Map(location = maplocation, width = "75%", zoom_start = 18) # max zoom: 18
+    hauseOutline = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"coordinates":[[88.36925418969236,22.587214788302376],[88.3694517376025,22.58715159576029],[88.36938708014992,22.58697604029122],[88.36918509095563,22.587038580038893],[88.36925495581363,22.587214076966532]],"type":"LineString"}}]}
+    folium.GeoJson(hauseOutline, name="1").add_to(m)
+    folium.plugins.AntPath([[22.58826749694964, 88.36978025176631],
+    [22.58829906393933, 88.3696687635312],
+    [22.588552972074922, 88.36978173827646],
+    [22.58833474836929, 88.37041350489221],
+    [22.588230440053565, 88.37037188261735],
+    [22.58818652073957, 88.37052499312733],
+    [22.588380040113222, 88.37061121069615],
+    [22.58868472969833, 88.36970889832872],
+    [22.588307298210268, 88.36957065371098],
+    [22.588065741899328, 88.36948481064627],
+    [22.58717912238926, 88.36916089413626],
+    [22.587157162565873, 88.36923521962592]]).add_to(m)
+    context={
+        'map' : m._repr_html_ 
+    }
+    return render(request,'map.html',context)
 
 @login_required
 def courses(request):
-    return render(request,'courses.html')
+     #Authentication_Status
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        student = Student.objects.get(roll_no=request.user)
+        courses = Course.objects.filter(enrolled_students__in=[student])
+        is_student = True
+    elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
+        professor = Professor.objects.get(professor_id=request.user)
+        courses = Course.objects.filter(instructors__in=[professor]) 
+        is_student = False
+    elif request.user.is_authenticated:
+       courses = Course.objects.all
+       is_student = False
+    else:
+        return redirect('login')
+    
+    context = {
+        'courses': courses,
+    } 
+    return render(request,'courses.html',context)
+
+def coursedetails(request,code):
+    course= Course.objects.get(course_id=code)
+    is_student=request.user.groups.filter(name='Student').exists()
+    context={
+        'course' : course,
+        'is_student': is_student
+    }
+    return render(request,'coursedetails.html',context)
