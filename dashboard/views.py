@@ -6,6 +6,8 @@ from dashboard.models import *
 import folium
 from folium import plugins
 from ipywidgets import *
+import os
+import openai
 
 # Create your views here
 @login_required(login_url="login")
@@ -106,8 +108,8 @@ def announcement(request):
 
 @login_required(login_url="login")
 def map(request):
-    maplocation = (22.5891138440305, 88.37022797671469)
-    m = folium.Map(location = maplocation, width = "75%", zoom_start = 18) # max zoom: 18
+    maplocation = (22.58834117253593, 88.37003485253165)
+    m = folium.Map(location = maplocation, width = "100%", zoom_start = 17) # max zoom: 18
     hauseOutline = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"coordinates":[[88.36925418969236,22.587214788302376],[88.3694517376025,22.58715159576029],[88.36938708014992,22.58697604029122],[88.36918509095563,22.587038580038893],[88.36925495581363,22.587214076966532]],"type":"LineString"}}]}
     folium.GeoJson(hauseOutline, name="1").add_to(m)
     folium.plugins.AntPath([[22.58826749694964, 88.36978025176631],
@@ -151,9 +153,13 @@ def courses(request):
 
 def coursedetails(request,code):
     course= Course.objects.get(course_id=code)
+    professors=Professor.objects.filter(courses_taught=course)
+    students=Student.objects.filter(enrolled_courses=course)
     is_student=request.user.groups.filter(name='Student').exists()
     context={
         'course' : course,
+        'professors' : professors,
+        'students' : students,
         'is_student': is_student
     }
     return render(request,'coursedetails.html',context)

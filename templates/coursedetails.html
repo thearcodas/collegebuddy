@@ -16,7 +16,9 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" >
         <div class="accordion-body">
-          <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          {%for professor in professors%}
+          <a href=# >{{professor.professor_id}} - {{professor.name}}</a>
+          {%endfor%}
         </div>
       </div>
     </div>
@@ -28,7 +30,9 @@
       </h2>
       <div id="collapseTwo" class="accordion-collapse collapse" >
         <div class="accordion-body">
-          <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          {%for student in students%}
+          <a href=# >{{student.roll_no}} - {{student.name}}</a>
+          {%endfor%}
         </div>
       </div>
     </div>

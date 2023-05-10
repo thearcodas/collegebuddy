@@ -7,6 +7,27 @@
 {% block header%}Map{% endblock header %}
 
 {% block body %}
-{{map|safe}}
-<br><br>
+<div class="row">
+    <div class="col-md-7">
+        {{map|safe}}
+        <br><br>
+    </div>
+    <div class="col-md-5">
+        <form class="" action='map'>
+            {% csrf_token %}
+            <h2>Journey</h2>
+            <div class="form-group">
+                <label for="start">From:</label>
+                <input type="text" class="form-control" id="start" name="start" placeholder="Main Gate">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="end">To:</label>
+                <input type="text" class="form-control" id="end" name="end" placeholder="Canteen">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button><br><br>
+        </form>
+    </div>
+</div>
 {% endblock body %}
