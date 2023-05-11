@@ -38,3 +38,6 @@ class TestAdmin(admin.ModelAdmin):
 class StreamAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'department')
 
+@admin.register(Maps)
+class MapAdmin(admin.ModelAdmin):
+    list_display=('name','location')

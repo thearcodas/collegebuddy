@@ -99,3 +99,6 @@ class Query(models.Model):
     query = models.TextField()
     answer = models.TextField(blank=True,null=True)
 
+class Maps(models.Model):
+    name = models.TextField()
+    location=models.TextField()
