@@ -109,6 +109,7 @@ def announcement(request):
 @login_required(login_url="login")
 def map(request):
     maplocation = (22.58834117253593, 88.37003485253165)
+    mapobj=Maps.objects.all()
     m = folium.Map(location = maplocation, width = "100%", zoom_start = 17) # max zoom: 18
     if request.method=='POST':
         start= request.POST['start']
@@ -132,7 +133,8 @@ def map(request):
             [22.586953686046698, 88.36906028470707],
             [22.586896420980338, 88.36923527622218]]).add_to(m)
     context={
-        'map' : m._repr_html_ 
+        'map' : m._repr_html_ ,
+        'mapobj' : mapobj
     }
     return render(request,'map.html',context)
 

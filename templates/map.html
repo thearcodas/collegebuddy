@@ -18,12 +18,20 @@
             <h2>Journey</h2>
             <div class="form-group">
                 <label for="start">From:</label>
-                <input type="text" class="form-control" id="start" name="start" placeholder="Main Gate">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="start" id="start">
+                    {% for maps in mapobj %}
+                        <option value="{{ maps.name }}">{{ maps.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <br>
             <div class="form-group">
                 <label for="end">To:</label>
-                <input type="text" class="form-control" id="end" name="end" placeholder="Canteen">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="end" id="end">
+                    {% for maps in mapobj %}
+                        <option value="{{ maps.name }}">{{ maps.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <br>
             <button type="submit" class="btn btn-primary">Submit</button><br><br>
