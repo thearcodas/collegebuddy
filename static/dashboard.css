@@ -86,7 +86,6 @@ body {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
-<style>
   .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -158,4 +157,60 @@ body {
   .bd-mode-toggle {
     z-index: 1500;
   }
-</style>
+/*chatbot*/
+
+#chatbot{
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  margin-top: 50px;
+  border-radius: 10px;
+  border: 1px solid gray;
+  padding :5px;
+
+}
+
+.botText{
+  font-family: monospace;
+  font-size: 14px;
+  text-align: left;
+  line-height: 25px;
+  color: #2c3e50;
+}
+
+.userText{
+  font-family: monospace;
+  font-size: 14px;
+  text-align: right;
+  line-height: 25px;
+  color: #2c3e50;
+}
+#userInput{
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  /*margin-top: 40px;*/
+  text-align: center;
+  bottom: 0;
+  position:fixed;
+}
+
+#textInput{
+  border: 3px solid white;
+  border-bottom: 3px solid #afafaf;
+  font-family:monospace;
+  font-size: 14px;
+  width: 60%;
+  padding: 16px;
+  color: rgb(213,67,41);
+}
+
+#buttonInput{
+  padding: 5px;
+  font-family: monospace;
+  font-size:14px;
+  border:3px solid #5b605c;
+  background-color: rgb(40,48,40);
+  color:white;
+  border-radius:10px;
+}

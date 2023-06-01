@@ -5,13 +5,27 @@ from django.contrib.auth.decorators import login_required
 from dashboard.models import *
 import folium
 from folium import plugins
-from ipywidgets import *
-import os
-import openai
 
+import os
+from langchain.agents import *
+from langchain import SQLDatabase,SQLDatabaseChain
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
 # Create your views here
 @login_required(login_url="login")
 def dashboard(request):
+    os.environ['OPENAI_API_KEY'] = "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"
+    db = SQLDatabase.from_uri("sqlite:///db.sqlite3")
+    llm = ChatOpenAI(temperature=0.9,model_name='gpt-3.5-turbo')
+    memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+    db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True,memory= memory)
+    response=""
+    if request.method == "POST":
+        question=request.POST.get('userInput')
+        response= db_chain.run(question)
+        return HttpResponse(response)
+
     return render(request,'dashboard.html')
 
 def loginUser(request):
