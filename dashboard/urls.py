@@ -10,7 +10,6 @@ urlpatterns = [
     path('profile', views.profile,name='profile'),
     path('schedules', views.schedules,name='schedules'),
     path('announcement', views.announcement,name='announcement'),
-    path('map', views.map,name='map'),
     path('courses', views.courses,name='courses'),
     path('<str:code>/', views.coursedetails,name='coursedetails'),
     path('login', views.loginUser,name='login'),

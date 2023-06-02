@@ -120,37 +120,7 @@ def announcement(request):
             
     return render(request,'announcements.html',context)
 
-@login_required(login_url="login")
-def map(request):
-    maplocation = (22.58834117253593, 88.37003485253165)
-    mapobj=Maps.objects.all()
-    m = folium.Map(location = maplocation, width = "100%", zoom_start = 17) # max zoom: 18
-    if request.method=='POST':
-        start= request.POST['start']
-        end=request.POST['end']
-        hauseOutline = Maps.objects.get(name=start)
-        folium.GeoJson(hauseOutline.location, name="1").add_to(m)
-        hauseOutline = Maps.objects.get(name=end)
-        folium.GeoJson(hauseOutline.location, name="2").add_to(m)
-        #folium.plugins.AntPath([[22.58826749694964, 88.36978025176631]..
-        #Ant Paths
-        if(start=='Main Building' and end=='Millenium Building'):
-            folium.plugins.AntPath([[22.58825741381537, 88.36977309152951],
-            [22.5882901363904, 88.36965569215971],
-            [22.588556007022802, 88.36978195185912],
-            [22.588337175077456, 88.37041103527503],
-            [22.58823287187886, 88.37037116379082],
-            [22.58818992348047, 88.37052621956377],
-            [22.587531379467165, 88.37032021634269],
-            [22.587838154918288, 88.36940095712288],
-            [22.587078442002735, 88.36912452209913],
-            [22.586953686046698, 88.36906028470707],
-            [22.586896420980338, 88.36923527622218]]).add_to(m)
-    context={
-        'map' : m._repr_html_ ,
-        'mapobj' : mapobj
-    }
-    return render(request,'map.html',context)
+
 
 @login_required
 def courses(request):
