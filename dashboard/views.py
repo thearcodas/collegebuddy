@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from dashboard.models import *
-import folium
-from folium import plugins
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 import os
 from langchain.agents import *
@@ -46,6 +48,22 @@ def logoutUser(request):
     logout(request)
     return redirect("/login")
 
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('changepassword')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'changepassword.html', {
+        'form': form
+    })
+    
 @login_required(login_url="login")
 def profile(request):
     # Get the current user's profile based on their authentication status
@@ -120,7 +138,31 @@ def announcement(request):
             
     return render(request,'announcements.html',context)
 
+def viewprofile(request,id):
+    #fetch the profiles
+    user=User.objects.get(username=id)
+    if Student.objects.filter(roll_no=user).exists():
+        profile = Student.objects.get(roll_no=user)
+        is_student=True
+        display=True
+        msg="Showing student's profile with roll "+id
+    elif Professor.objects.filter(professor_id=user).exists():
+        profile = Professor.objects.get(professor_id=user)
+        is_student = False
+        display=True
+        msg="Showing professor's profile with Id "+id
+    else:
+        display=False
+        msg='No profiles are present with this Id'
 
+    # Display the current profile information
+    context = {
+        'profile': profile,
+        'display': display,
+        'is_student': is_student,
+        'message': msg,
+    }
+    return render(request,'viewprofile.html',context)
 
 @login_required
 def courses(request):

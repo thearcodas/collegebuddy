@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block profile %}active{% endblock profile %}
+
+{% block title%}Profile{% endblock title %}
+
+{% block header%}Profile{% endblock header %}
+
+{% block body %}
+<div class="container">
+    <h3>{{message}}</h3>
+    {%if display %}
+    <table>
+        <tr>
+            <center><img src="{{ profile.profile_pic.url }}" width="150" class="img-thumbnail" alt="{{ profile.profile_pic.url }}"></center>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{profile.name}}</td>
+        </tr>
+        <tr>
+            <th>Phone No:</th>
+            <td>{{profile.phone_no}}</td>
+        </tr>
+        {%if is_student%}
+
+        <tr>
+            <th>Roll Number:</th>
+            <td>{{profile.roll_no}}</td>
+        </tr>
+        <tr>
+            <th>Semester:</th>
+            <td>{{profile.semester}}</td>
+        </tr>
+        <tr>
+            <th>Stream:</th>
+            <td>{{profile.stream}}</td>
+        </tr>
+        <tr>
+            <th>Facebook:</th>
+            <td><a href="{{profile.facebook_link}}">{{profile.facebook_link}}</a></td>
+        </tr>
+        <tr>
+            <th>Instagram:</th>
+            <td><a href="{{profile.instagram_link}}">{{profile.instagram_link}}</a></td>
+        </tr>
+        <tr>
+            <th>Bio:</th>
+            <td>{{profile.bio}}</td>
+        </tr>
+
+        {%else%}
+
+        <tr>
+            <th>Professor_id:</th>
+            <td>{{profile.professor_id}}</td>
+        </tr>
+        <tr>
+            <th>Department: </th>
+            <td>{{profile.department}}</td>
+        </tr>
+        <tr>
+            <th>Highest Qualification</th>
+            <td>{{profile.highest_qualification}}</td>
+        </tr>
+        <tr>
+            <th>Courses Taught:</th>
+            <td>
+                <ul>
+                    {% for course in profile.courses_taught.all %}
+                      <li>{{ course.name }}</li>
+                    {% endfor %}
+                    </ul>
+            </td>
+        </tr>
+        {% endif%}
+        </table>
+        {% endif %}
+{% endblock body %}
