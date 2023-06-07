@@ -36,7 +36,7 @@ class Course(models.Model):
     course_id = models.CharField(max_length=20)
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    
+    department = models.ForeignKey('Department', on_delete=models.SET_NULL, blank=True, null=True, related_name='course_department')
 
     def __str__(self):
         return self.name
@@ -50,8 +50,9 @@ class Stream(models.Model):
         return self.name
         
 class Department(models.Model):
+    
     name = models.CharField(max_length=50)
-    hod = models.OneToOneField(Professor, on_delete=models.SET_NULL, blank=True, null=True, related_name='department_head')
+    
     def __str__(self):
         return self.name
 

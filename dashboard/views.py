@@ -48,6 +48,7 @@ def logoutUser(request):
     logout(request)
     return redirect("/login")
 
+@login_required(login_url="login")
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -186,6 +187,7 @@ def courses(request):
     } 
     return render(request,'courses.html',context)
 
+@login_required(login_url="login")
 def coursedetails(request,code):
     course= Course.objects.get(course_id=code)
     professors=Professor.objects.filter(courses_taught=course)
