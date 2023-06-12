@@ -10,22 +10,25 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 import os
 from langchain.agents import *
-from langchain import SQLDatabase,SQLDatabaseChain
+from langchain import LLMChain, SQLDatabase,SQLDatabaseChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
+
 # Create your views here
 @login_required(login_url="login")
 def dashboard(request):
-    os.environ['OPENAI_API_KEY'] = "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"
+    os.environ['OPENAI_API_KEY'] = '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'
     db = SQLDatabase.from_uri("sqlite:///db.sqlite3")
-    llm = ChatOpenAI(temperature=0.9,model_name='gpt-3.5-turbo')
+    llm = ChatOpenAI(temperature=0,model_name='gpt-3.5-turbo')
     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-
-    db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True,memory= memory)
-    response=""
+    db_chain = SQLDatabaseChain.from_llm(llm, db, verbose=True,memory=memory)
+    
     if request.method == "POST":
         question=request.POST.get('userInput')
-        response= db_chain.run(question)
+        try:
+            response= db_chain.run(question)
+        except Exception as e:
+            response= e
         return HttpResponse(response)
 
     return render(request,'dashboard.html')
@@ -48,41 +51,29 @@ def logoutUser(request):
     logout(request)
     return redirect("/login")
 
-@login_required(login_url="login")
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('changepassword')
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'changepassword.html', {
-        'form': form
-    })
+
     
 @login_required(login_url="login")
 def profile(request):
     # Get the current user's profile based on their authentication status
+    is_admin=False
+    profile=''
+    is_student = False
     if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
-        print(request.user)
         profile = Student.objects.get(roll_no=request.user)
         is_student = True
     elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
         profile = Professor.objects.get(professor_id=request.user)
         is_student = False
     elif request.user.is_authenticated:
-       return HttpResponse("admin dont have profiles")
+       is_admin=True
     else:
         return redirect('login')
 
     # Display the current profile information
     context = {
         'profile': profile,
+        'is_admin': is_admin,
         'is_student': is_student,
     }
 
@@ -107,7 +98,23 @@ def profile(request):
     
 @login_required(login_url="login")
 def schedules(request):
-    return render(request,'schedules.html')
+    is_admin=False
+    schedule=''
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        profile = Student.objects.get(roll_no=request.user)
+        semester=profile.semester
+        schedule= Schedule.objects.get(stream=profile.stream,name= f'semester {semester}')
+    elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
+        profile = Professor.objects.get(professor_id=request.user)
+        schedule = Schedule.objects.filter(name= profile.name)
+    else:
+       is_admin=True
+    
+    context={
+        'schedule': schedule,
+        'is_admin': is_admin
+    }
+    return render(request,'schedules.html',context)
 
 @login_required(login_url="login")
 def announcement(request):
@@ -192,11 +199,17 @@ def coursedetails(request,code):
     course= Course.objects.get(course_id=code)
     professors=Professor.objects.filter(courses_taught=course)
     students=Student.objects.filter(enrolled_courses=course)
+    materials=StudyMaterial.objects.filter(course=course)
+    
     is_student=request.user.groups.filter(name='Student').exists()
+    
+    
+
     context={
         'course' : course,
         'professors' : professors,
         'students' : students,
+        'materials' : materials,
         'is_student': is_student
     }
     return render(request,'coursedetails.html',context)

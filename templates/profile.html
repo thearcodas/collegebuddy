@@ -9,7 +9,10 @@
 {% block body %}
 
 <div class="container">
-
+  {%if is_admin %}
+    <h1>Admins dont have profiles</h1>
+    <input type="button" class="btn btn-danger" onclick="location.href='changepassword';" value="Change password">
+    {%else%}
   <form method="POST" action="profile">
     {% csrf_token %}
     <!--common fields-->
@@ -89,6 +92,7 @@
     <center><button type="submit" class="btn btn-primary" >Save Profile</button>
     <input type="button" class="btn btn-danger" onclick="location.href='{% url 'changepassword' %}';" value="Change password"></center>
     <br>
-  </form>
+    </form>
 </div>
+{%endif%}
 {% endblock body %}

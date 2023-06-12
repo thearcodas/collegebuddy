@@ -6,4 +6,12 @@
 
 {% block header%}Schedules{% endblock header %}
 
-{% block body %}This is Schedules page{% endblock body %}
+{% block body %}
+{%if is_admin %}
+<h1>Admins don't have Schedules</h1>
+{% else %}
+<div class="row justify-content-center">
+    <div class="col-10">
+        <img src="{{schedule.image.url}}" width="700px" alt="{{schedule.stream}} {{schedule.name}}" >
+  {%endif%}
+{% endblock body %}

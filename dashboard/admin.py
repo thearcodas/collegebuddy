@@ -38,3 +38,10 @@ class TestAdmin(admin.ModelAdmin):
 class StreamAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'department')
 
+@admin.register(StudyMaterial)
+class StudyMaterialAdmin(admin.ModelAdmin):
+    list_display = ('course', 'title', 'description','file')
+
+@admin.register(Schedule)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ('stream', 'name','image')

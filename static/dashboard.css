@@ -162,8 +162,9 @@ body {
 #chatbot{
   margin-left: auto;
   margin-right: auto;
-  width: 70%;
+  width: 90%;
   margin-top: 50px;
+  margin-bottom: 50px;
   border-radius: 10px;
   border: 1px solid gray;
   padding :5px;
@@ -191,8 +192,8 @@ body {
   width: 80%;
   /*margin-top: 40px;*/
   text-align: center;
-  bottom: 0;
-  position:fixed;
+  /*bottom: 0;
+  /*position:fixed;*/
 }
 
 #textInput{

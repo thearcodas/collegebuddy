@@ -16,9 +16,12 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" >
         <div class="accordion-body">
-          {%for professor in professors%}
-          <a href=# >{{professor.professor_id}} - {{professor.name}}</a>
-          {%endfor%}
+          <table>
+            {%for professor in professors%}
+            <td class='p-4'><img src="{{ professor.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ professor.profile_pic.url }}"></center>
+            <br><a href={%url 'viewprofile' professor.professor_id%} >{{professor.name}}</a></td>
+            {%endfor%}
+            </table>
         </div>
       </div>
     </div>
@@ -30,9 +33,12 @@
       </h2>
       <div id="collapseTwo" class="accordion-collapse collapse" >
         <div class="accordion-body">
+          <table>
           {%for student in students%}
-          <a href=# >{{student.roll_no}} - {{student.name}}</a>
+          <td class='p-4'><img src="{{ student.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ student.profile_pic.url }}"></center>
+          <br><a href={%url 'viewprofile' student.roll_no%} >{{student.name}}</a></td>
           {%endfor%}
+          </table>
         </div>
       </div>
     </div>
@@ -44,7 +50,18 @@
       </h2>
       <div id="collapseThree" class="accordion-collapse collapse" >
         <div class="accordion-body">
-          <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          <table>
+            {%for material in materials%}
+            <td title="{{material.description}}">
+              <div style="border: 1px solid;
+                padding: 10px;
+                box-shadow: 5px 8px #888888;">
+                <a href="{{material.file.url}}" >{{material.title}}</a>
+                <button type="submit" value="{{material.id}}" name="material" class="btn btn-danger" onclick="deleteMaterial()">X</button>
+              </div>
+            </td>
+            {%endfor%}
+          </table>
         </div>
       </div>
     </div>
@@ -73,4 +90,16 @@
         </div>
     </div>
   </div>
+  <script>
+    function deleteMaterial()
+    {
+      if (confirm("Are you Sure?")) 
+      {
+        $.post('course/{{course.course_id}}',{userInput:userText,csrfmiddlewaretoken:'{{csrf_token}}'}).done(function(data){
+
+          
+      })
+      }
+    }
+  </script>
 {% endblock body %}

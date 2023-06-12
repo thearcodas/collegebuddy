@@ -9,9 +9,9 @@
 {% block body %}
     <div>
         {% for course in courses %}
-        <a  class="d-grid gap-2 p-2" href="{% url 'coursedetails' course.course_id %}">
-            <button class="btn btn-light">{{ course.course_id }} - {{ course.name }}</button>
-          </a>
+        <div class="d-grid gap-2 p-2">
+            <button class="btn btn-light " onclick="location.href='{% url 'coursedetails' course.course_id %}';">{{ course.course_id }} - {{ course.name }}</button>
+        </div>
         {% endfor %}
         </div>
 {% endblock body %}
