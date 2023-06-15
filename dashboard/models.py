@@ -38,7 +38,8 @@ class Course(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
     department = models.ForeignKey('Department', on_delete=models.SET_NULL, blank=True, null=True, related_name='course_department')
-
+    syllabus= models.FileField(upload_to='syllabuses/',default='syllabuses/default.jpg')
+    
     def __str__(self):
         return self.name
 
@@ -86,24 +87,6 @@ class Attendance(models.Model):
     def __str__(self):
         return f'{self.student} - {self.course} - {self.date} - {self.present}'
 
-
-class Test(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='tests')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='course_tests')
-    date = models.DateField()
-    marks = models.IntegerField()
-    full_marks = models.IntegerField()
-    def __str__(self):
-        return f'{self.student} - {self.course} - {self.date} - {self.marks}'
-
-
-class Query(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='queries')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='asked_queries')
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='answered_queries')
-    query = models.TextField()
-    answer = models.TextField(blank=True,null=True)
-
 class Schedule(models.Model):
     stream= models.ForeignKey(Stream, on_delete=models.CASCADE, related_name='schedule_stream')
     name= models.CharField(max_length=50,default="semester")
@@ -112,3 +95,10 @@ class Schedule(models.Model):
     def __str__(self):
         return f'{self.stream} - {self.name} - {self.image}'
     
+class PYQ(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='question_papers')
+    title = models.CharField(max_length=50)
+    file = models.FileField(upload_to='question_papers/')
+    description = models.TextField(blank=True, null=True,default="sample paper")
+    def __str__(self):
+        return self.title

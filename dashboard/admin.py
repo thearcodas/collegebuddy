@@ -22,17 +22,9 @@ class CourseAdmin(admin.ModelAdmin):
 class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ('department', 'announcement_title')
 
-@admin.register(Query)
-class QueryAdmin(admin.ModelAdmin):
-    list_display = ('student', 'professor', 'course', 'query')
-
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('student', 'course', 'date', 'present')
-
-@admin.register(Test)
-class TestAdmin(admin.ModelAdmin):
-    list_display = ('course', 'date', 'full_marks')
 
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):
@@ -45,3 +37,7 @@ class StudyMaterialAdmin(admin.ModelAdmin):
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('stream', 'name','image')
+    
+@admin.register(PYQ)
+class PYQAdmin(admin.ModelAdmin):
+    list_display = ('course', 'title','file')

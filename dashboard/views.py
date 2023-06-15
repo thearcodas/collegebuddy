@@ -6,6 +6,7 @@ from dashboard.models import *
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from .forms import *
 
 
 import os
@@ -200,16 +201,59 @@ def coursedetails(request,code):
     professors=Professor.objects.filter(courses_taught=course)
     students=Student.objects.filter(enrolled_courses=course)
     materials=StudyMaterial.objects.filter(course=course)
-    
+    questions=PYQ.objects.filter(course=course)
     is_student=request.user.groups.filter(name='Student').exists()
     
+    if request.method == "POST":
+        id=request.POST.get('id')
+        msg= request.POST.get('message')
+        print(id)
+        print(msg)
+        
+        if 'material' in msg:
+            material= StudyMaterial.objects.get(pk=int(id))
+            material.delete()
+        else:
+            question= PYQ.objects.get(pk=int(id))
+            question.delete()
     
-
     context={
         'course' : course,
         'professors' : professors,
         'students' : students,
         'materials' : materials,
+        'questions' : questions,
         'is_student': is_student
     }
     return render(request,'coursedetails.html',context)
+
+@login_required(login_url="login")
+def addmaterial(request,code,material):
+    is_student=False
+    
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        is_student=True
+    if request.method == 'POST':
+        form = MaterialForm(request.POST,request.FILES)
+        title=request.POST['title']
+        file=request.FILES['fileupload']
+        desc=request.POST['desc']
+        print(file.name)
+        course= Course.objects.get(course_id=code)
+        if (material=='question'):
+            instance = PYQ.objects.create(title=title,file=file,course=course,description=desc)
+            instance.save()
+        elif(material=='material'):
+            instance = StudyMaterial.objects.create(title=title,file=file,course=course,description=desc)
+            instance.save()
+    else:
+        form= MaterialForm()
+    context={
+        'form' : form,
+        'is_student' : is_student,
+        'material': material,
+        'code' : code
+    }
+    return render(request,'addmaterial.html',context)
+
+    

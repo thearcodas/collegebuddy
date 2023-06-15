@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block courses %}active{% endblock courses  %}
+
+{% block title%}Courses{% endblock title %}
+
+{% block header%}Add Materials{% endblock header %}
+
+{% block body %}
+  {%if is_student%}
+    <h1 class="display-4">Not allowed to add materials</h1>
+  {%else%}
+    <form method="POST" action="{%url 'addmaterial' code material%} "enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--add form-->
+        <div>
+          {{ form|crispy}}
+        </div>
+        <br><br>
+        <center><button type="submit" class="btn btn-primary" >Add {{material}}</button></center>
+        </form>
+  {%endif%}
+{%endblock body%}

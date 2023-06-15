@@ -7,98 +7,113 @@
 {% block header%}{{course.course_id}}-{{course.name}}{% endblock header %}
 
 {% block body %}
-<div class="accordion" id="accordionExample">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Professor(s) Assigned
-        </button>
-      </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" >
-        <div class="accordion-body">
-          <table>
-            {%for professor in professors%}
-            <td class='p-4'><img src="{{ professor.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ professor.profile_pic.url }}"></center>
-            <br><a href={%url 'viewprofile' professor.professor_id%} >{{professor.name}}</a></td>
-            {%endfor%}
-            </table>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Classmate Encyclopedia:)
-        </button>
-      </h2>
-      <div id="collapseTwo" class="accordion-collapse collapse" >
-        <div class="accordion-body">
-          <table>
-          {%for student in students%}
-          <td class='p-4'><img src="{{ student.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ student.profile_pic.url }}"></center>
-          <br><a href={%url 'viewprofile' student.roll_no%} >{{student.name}}</a></td>
-          {%endfor%}
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Study Materials
-        </button>
-      </h2>
-      <div id="collapseThree" class="accordion-collapse collapse" >
-        <div class="accordion-body">
-          <table>
-            {%for material in materials%}
-            <td title="{{material.description}}">
-              <div style="border: 1px solid;
-                padding: 10px;
-                box-shadow: 5px 8px #888888;">
-                <a href="{{material.file.url}}" >{{material.title}}</a>
-                <button type="submit" value="{{material.id}}" name="material" class="btn btn-danger" onclick="deleteMaterial()">X</button>
+<div class="container">
+      <table >
+        <tr>
+        <th>Professor Assigned: </th>
+        {%for professor in professors%}
+        <center><td class='p-4'><img src="{{ professor.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ professor.profile_pic.url }}">
+        <br><a href={%url 'viewprofile' professor.professor_id%} >{{professor.name}}</a></td></center>
+        {%endfor%}
+        </tr>
+        <tr>
+          <th>Syllabus: </th>
+          <td title="syllabus">
+              <a href="{{course.syllabus.url}}" >Click here to view</a>
+          </td>
+        </tr>
+      </table>
+          <div class="accordion pt-4" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Students Encyclopedia
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <table>
+                    {%for student in students%}
+                    <td class='p-4'><img src="{{ student.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ student.profile_pic.url }}"></center>
+                    <br><a href={%url 'viewprofile' student.roll_no%} >{{student.name}}</a></td>
+                    {%endfor%}
+                    </table>
+          
+                </div>
               </div>
-            </td>
-            {%endfor%}
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-            Test Grades
-          </button>
-        </h2>
-        <div id="collapseFour" class="accordion-collapse collapse" >
-          <div class="accordion-body">
-            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Study Materials
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <table>
+                    {%for material in materials%}
+                    <td title="{{material.description}}">
+                      <div style="border: 1px solid;
+                        padding: 10px;
+                        box-shadow: 5px 8px #888888;">
+                        <a href="{{material.file.url}}" >{{material.title}}</a>
+                        {%if not is_student%}
+                        <button type="submit" value="{{material.id}}" id="material{{material.id}}" name="material
+                        " class="btn btn-danger" onclick="deleteMaterial({{material.id}})">X</button>
+                        {%endif%}
+                      </div>
+                    </td>
+                    {%endfor%}
+                  </table>
+                  <br><br>
+                  <button class="btn btn-primary" onclick="location.href='{%url 'addmaterial' course.course_id 'material' %}';">Add Material</button>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Sample Question Papers
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <table>
+                    {%for question in questions%}
+                    <td title="{{question.title}}">
+                      <div style="border: 1px solid;
+                        padding: 10px;
+                        box-shadow: 5px 8px #888888;">
+                        <a href="{{question.file.url}}" >{{question.title}}</a>
+                        {% if not is_student%}
+                        <button type="submit" value="{{question.id}}" name="question{{question.id}}"
+                        id="question" class="btn btn-danger" onclick="deleteMaterial({{question.id}})">X</button>
+                        {%endif%}
+                      </div>
+                    </td>
+                    {%endfor%}
+                  </table>
+                  <br><br>
+                  <button class="btn btn-primary" onclick="location.href='{%url 'addmaterial' course.course_id 'question' %}';">Add Paper</button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-            Query Box
-          </button>
-        </h2>
-        <div id="collapseFive" class="accordion-collapse collapse" >
-          <div class="accordion-body">
-            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-          </div>
-        </div>
-    </div>
-  </div>
+        
+
+</div>
   <script>
-    function deleteMaterial()
+    function deleteMaterial(id)
     {
       if (confirm("Are you Sure?")) 
       {
-        $.post('course/{{course.course_id}}',{userInput:userText,csrfmiddlewaretoken:'{{csrf_token}}'}).done(function(data){
-
-          
-      })
+        $id= id;
+        msg= window.event.srcElement.id;
+        console.log(id+""+msg)
+        $.post("{% url 'coursedetails' course.course_id %}",{id:id,message:msg,csrfmiddlewaretoken:'{{csrf_token}}'}).done(function(data){
+          alert("Material deleted!");
+          document.getElementById($msg+$id).remove();
+        })
       }
     }
   </script>
