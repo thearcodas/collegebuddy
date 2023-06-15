@@ -8,15 +8,15 @@
 
 {% block body %}
 <!--accordian-->
-<div class="accordion" id="announcementsAccordion">
+<div class="accordion accordion-wrap" id="announcementsAccordion">
     {% for announcement in announcements %}
     <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ announcement.id }}" aria-expanded="false" aria-controls="collapse{{ announcement.id }}">
+      <h2 class="accordion-header ">
+        <button class="accordion-button collapsed bg-accordion" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ announcement.id }}" aria-expanded="false" aria-controls="collapse{{ announcement.id }}">
           {{ announcement.announcement_title }}
         </button>
       </h2>
-      <div id="collapse{{ announcement.id }}" class="accordion-collapse collapse" aria-labelledby="announcement{{ announcement.id }}" data-bs-parent="#announcementsAccordion">
+      <div id="collapse{{ announcement.id }}" class="accordion-collapse collapse bg-accordion" aria-labelledby="announcement{{ announcement.id }}" data-bs-parent="#announcementsAccordion">
         <div class="accordion-body">
           <p>{{ announcement.announcement_body }}</p><br><br>
           <p>Posted by <b>{{ announcement.department }} department</b> on <b>{{ announcement.date_published|date:"F d, Y" }}</b></p>
@@ -45,7 +45,7 @@
       <textarea class="form-control" id="a_body" name="a_body" rows="5" required></textarea>
     </div>
     <br>
-    <center><button type="submit" class="btn btn-primary" >Announce</button></center>
+    <center><button type="submit" class="btn btn-send" >Announce</button></center>
     <br>
   </fieldset>
   </form>

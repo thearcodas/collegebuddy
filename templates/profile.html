@@ -24,40 +24,48 @@
         <img id="profileImage" src="http://lorempixel.com/100/100"  class="img-thumbnail"/>
       {% endif %}
     </div>
+    <br>
     <div class="form-group">
       <label for="name">Name:</label>
       <input type="text" class="form-control" id="name" name="name" value="{{ profile.name }}" required>
     </div>
+    <br>
     <div class="form-group">
       <label for="phone_number">Phone Number:</label>
       <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_no }}" required>
     </div>
-    
+    <br>
     {% if is_student %}
       <div class="form-group">
         <label for="roll_number">Roll Number:</label>
-        <input type="text" class="form-control" id="roll_number" name="roll_number" value="{{ profile.roll_no }}" disabled>
+        <input type="text" class="form-control readonly" id="roll_number" name="roll_number" value="{{ profile.roll_no }}" readonly>
       </div>
+      <br>
       <div class="form-group">
         <label for="semester">Semester:</label>
-        <input type="number" class="form-control" id="semester" name="semester" value="{{ profile.semester }}" disabled>
+        <input type="number" class="form-control readonly" id="semester" name="semester" value="{{ profile.semester }}" readonly>
       </div>
+      <br>
       <div class="form-group">
         <label for="stream">Stream:</label>
-        <input type="text" class="form-control" id="stream" name="stream" value="{{ profile.stream }}" disabled>
+        <input type="text" class="form-control readonly" id="stream" name="stream" value="{{ profile.stream }}" readonly>
       </div>
+      <br>
       <div class="form-group">
           <label for="facebook_link">Facebook Link:</label>
           <input type="url" class="form-control" id="facebook_link" name="facebook_link" value="{{ profile.facebook_link }}" >
         </div>
+        <br>
         <div class="form-group">
           <label for="instagram_link">Instagram Link:</label>
           <input type="url" class="form-control" id="instagram_link" name="instagram_link" value="{{ profile.instagram_link }}" >
         </div>
+        <br>
         <div class="form-group">
           <label for="bio">Bio:</label>
           <textarea class="form-control" id="bio" name="bio" rows="5" >{{profile.bio}}</textarea>
         </div>
+        <br>
         <div class="form-group">
           <label >Enrolled courses:</label>
           <ul>
@@ -66,15 +74,23 @@
             {% endfor %}
             </ul>
         </div>
+        <br>
     {% else %}
       <div class="form-group">
         <label for="professor_id">Professor ID:</label>
-        <input type="text" class="form-control" id="professor_id" name="professor_id" value="{{ profile.professor_id }}" disabled>
+        <input type="text" class="form-control readonly" id="professor_id" name="professor_id" value="{{ profile.professor_id }}" readonly>
       </div>
+      <br>
       <div class="form-group">
         <label for="highest_qualification">Highest Qualification:</label>
         <input type="text" class="form-control" id="highest_qualification" name="highest_qualification" value="{{ profile.highest_qualification }}" required>
       </div>
+      <br>
+      <div class="form-group">
+        <label for="department">Department:</label>
+        <input type="text" class="form-control readonly" id="department" name="department" value="{{ profile.department }}" readonly>
+      </div>
+      <br>
       <div class="form-group">
         <label >Courses taught:</label>
         <ul>
@@ -83,14 +99,10 @@
           {% endfor %}
           </ul>
       </div>
-      <div class="form-group">
-        <label for="department">Department:</label>
-        <input type="text" class="form-control" id="department" name="department" value="{{ profile.department }}" disabled>
-      </div>
     {% endif %}
     <br>
-    <center><button type="submit" class="btn btn-primary" >Save Profile</button>
-    <input type="button" class="btn btn-danger" onclick="location.href='{% url 'changepassword' %}';" value="Change password"></center>
+    <center><button type="submit" class="btn btn-send" >Save Profile</button>
+    <input type="button" class="btn btn-danger" onclick="location.href='{% url 'reset_password' %}';" value="Change password"></center>
     <br>
     </form>
 </div>
