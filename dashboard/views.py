@@ -10,6 +10,7 @@ from .forms import *
 
 
 import os
+import openai
 from langchain.agents import *
 from langchain import LLMChain, SQLDatabase,SQLDatabaseChain
 from langchain.chat_models import ChatOpenAI
@@ -28,8 +29,10 @@ def dashboard(request):
         question=request.POST.get('userInput')
         try:
             response= db_chain.run(question)
+        except openai.error.AuthenticationError as ae:
+            response= "Developers! Please check the API key or provide a new one!"
         except Exception as e:
-            response= e
+           response= str(e)
         return HttpResponse(response)
 
     return render(request,'dashboard.html')
@@ -179,14 +182,11 @@ def courses(request):
     if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
         student = Student.objects.get(roll_no=request.user)
         courses = Course.objects.filter(enrolled_students__in=[student])
-        is_student = True
     elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
         professor = Professor.objects.get(professor_id=request.user)
         courses = Course.objects.filter(instructors__in=[professor]) 
-        is_student = False
     elif request.user.is_authenticated:
        courses = Course.objects.all
-       is_student = False
     else:
         return redirect('login')
     
@@ -198,17 +198,16 @@ def courses(request):
 @login_required(login_url="login")
 def coursedetails(request,code):
     course= Course.objects.get(course_id=code)
-    professors=Professor.objects.filter(courses_taught=course)
-    students=Student.objects.filter(enrolled_courses=course)
-    materials=StudyMaterial.objects.filter(course=course)
-    questions=PYQ.objects.filter(course=course)
-    is_student=request.user.groups.filter(name='Student').exists()
-    
+    professors= Professor.objects.filter(courses_taught=course)
+    students= Student.objects.filter(enrolled_courses=course)
+    materials= StudyMaterial.objects.filter(course=course)
+    questions= PYQ.objects.filter(course=course)
+    is_professor= request.user.groups.filter(name='Professor').exists()
+    is_student= request.user.groups.filter(name='Student').exists()
+        
     if request.method == "POST":
         id=request.POST.get('id')
         msg= request.POST.get('message')
-        print(id)
-        print(msg)
         
         if 'material' in msg:
             material= StudyMaterial.objects.get(pk=int(id))
@@ -223,7 +222,8 @@ def coursedetails(request,code):
         'students' : students,
         'materials' : materials,
         'questions' : questions,
-        'is_student': is_student
+        'is_professor': is_professor,
+        'is_student' : is_student,
     }
     return render(request,'coursedetails.html',context)
 
@@ -256,4 +256,49 @@ def addmaterial(request,code,material):
     }
     return render(request,'addmaterial.html',context)
 
+@login_required(login_url="login")
+def attendance(request,code):
+    attendance=message=""
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        student = Student.objects.get(roll_no=request.user)
+        attendance= Attendance.objects.filter(course= Course.objects.get(course_id=code),student=student)
+        is_student=True
+    else:
+        message='You guys dont have attendance!'
+        is_student=False
+    
+    context={
+        'code' :    code,
+        'is_student' : is_student,
+        'attendances': attendance,
+        'message': message
+    }
+    return render(request,'attendance.html',context)
+
+@login_required(login_url="login")
+def updateattendance(request,code):
+    is_student=False
+    course= Course.objects.get(course_id=code)
+    students = Student.objects.filter(enrolled_courses__in=[course])
+    message=""
+    attendance=[]
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        is_student=True
+        message='You dont have permission to be here!'
+    
+    if request.method=='POST':
+        date= request.POST['date']
+        total_weightage=request.POST['total']
+        for student in students:
+            id=f'weight{student.roll_no}'
+            weightage=request.POST[id]
+            attendance.append(Attendance(date=date,course=course,student=student,weightage=weightage,total_weightage=total_weightage))
+        instance=Attendance.objects.bulk_create(attendance)
+        
+    context={
+        'is_student' : is_student,
+        'students': students,
+        'message': message
+    }
+    return render(request,'updateattendance.html',context)
     

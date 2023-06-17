@@ -92,6 +92,11 @@
       </div>
       <br>
       <div class="form-group">
+        <label for="designation">Designation:</label>
+        <input type="text" class="form-control readonly" id="designation" name="designation" value="{{ profile.designation }}" readonly>
+      </div>
+      <br>
+      <div class="form-group">
         <label >Courses taught:</label>
         <ul>
           {% for course in profile.courses_taught.all %}

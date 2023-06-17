@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block courses %}active{% endblock courses  %}
+
+{% block title%}Attendance{% endblock title %}
+
+{% block header%}Attendance{% endblock header %}
+
+{%block body%}
+<div class="container">
+    {%if is_student%}
+    <table class="table table-bordered ">
+        <thead class="thead">
+        <tr>
+            <th>Date</th>
+            <th>Weightage</th>
+            <th>Total Weightage</th>
+        </tr>
+    </thead>
+        {%for attendance in attendances%}
+        <tr>
+            <td>{{attendance.date}}</td>
+            <td>{{attendance.weightage}}</td>
+            <td>{{attendance.total_weightage}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+    {%else%}
+    <h2>{{message}}</h2>
+    <center><button class="btn btn-light" onclick="location.href='{%url 'updateattendance' code %}';">Update Attendance</button></center>
+    {%endif%}
+</div>
+{%endblock body%}

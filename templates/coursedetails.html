@@ -9,29 +9,39 @@
 {% block body %}
 <div class="container">
       <table >
-        <tr>
-        <th>Professor Assigned: </th>
+        
+        <tr class='p-4'>
         {%for professor in professors%}
-        <center><td class='p-4'><img src="{{ professor.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ professor.profile_pic.url }}">
-        <br><a href={%url 'viewprofile' professor.professor_id%} >{{professor.name}}</a></td></center>
+        <center><img src="{{ professor.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ professor.profile_pic.url }}">
+        <br><a href={%url 'viewprofile' professor.professor_id%} >{{professor.name}}</a></center>
         {%endfor%}
         </tr>
+        <br>
         <tr>
           <th>Syllabus: </th>
           <td title="syllabus">
               <a href="{{course.syllabus.url}}" >Click here to view</a>
           </td>
         </tr>
+        <br>
+        <tr>
+          <th>Attendance: </th>
+          <td >
+            <button class="btn btn-light" onclick="location.href='{%url 'attendance' course.course_id %}';">
+              View Attendance
+            </button>
+          </td>
+        </tr>
       </table>
-          <div class="accordion pt-4" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <div class="accordion pt-4 pb-4" id="accordionExample">
+            <div class="accordion-item text-white bg-accordion">
+              <h2 class="accordion-header bg-accordion" id="headingOne">
+                <button class="accordion-button bg-accordion text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                   Students Encyclopedia
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
+                <div class="accordion-body bg-accordion text-white">
                   <table>
                     {%for student in students%}
                     <td class='p-4'><img src="{{ student.profile_pic.url }}" width="100" class="img-thumbnail" alt="{{ student.profile_pic.url }}"></center>
@@ -43,21 +53,23 @@
               </div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <h2 class="accordion-header bg-accordion" id="headingTwo">
+                <button class="accordion-button bg-accordion text-white collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                   Study Materials
                 </button>
               </h2>
               <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
+                <div class="accordion-body bg-accordion">
                   <table>
                     {%for material in materials%}
                     <td title="{{material.description}}">
-                      <div style="border: 1px solid;
+                      <div style="
+                        background-color: #fff;
+                        border: 1px solid;
                         padding: 10px;
-                        box-shadow: 5px 8px #888888;">
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                         <a href="{{material.file.url}}" >{{material.title}}</a>
-                        {%if not is_student%}
+                        {%if is_professor %}
                         <button type="submit" value="{{material.id}}" id="material{{material.id}}" name="material
                         " class="btn btn-danger" onclick="deleteMaterial({{material.id}})">X</button>
                         {%endif%}
@@ -66,26 +78,30 @@
                     {%endfor%}
                   </table>
                   <br><br>
-                  <button class="btn btn-primary" onclick="location.href='{%url 'addmaterial' course.course_id 'material' %}';">Add Material</button>
+                  {% if is_professor %}
+                  <button class="btn btn-light" onclick="location.href='{%url 'addmaterial' course.course_id 'material' %}';">Add Material</button>
+                  {%endif%}
                 </div>
               </div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              <h2 class="accordion-header bg-accordion" id="headingThree">
+                <button class="accordion-button bg-accordion text-white collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                   Sample Question Papers
                 </button>
               </h2>
               <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
+                <div class="accordion-body bg-accordion">
                   <table>
                     {%for question in questions%}
                     <td title="{{question.title}}">
-                      <div style="border: 1px solid;
+                      <div style="
+                        background-color:#fff
+                        border: 1px solid;
                         padding: 10px;
-                        box-shadow: 5px 8px #888888;">
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                         <a href="{{question.file.url}}" >{{question.title}}</a>
-                        {% if not is_student%}
+                        {% if is_professor %}
                         <button type="submit" value="{{question.id}}" name="question{{question.id}}"
                         id="question" class="btn btn-danger" onclick="deleteMaterial({{question.id}})">X</button>
                         {%endif%}
@@ -94,7 +110,9 @@
                     {%endfor%}
                   </table>
                   <br><br>
-                  <button class="btn btn-primary" onclick="location.href='{%url 'addmaterial' course.course_id 'question' %}';">Add Paper</button>
+                  {% if is_professor %}
+                  <button class="btn btn-light" onclick="location.href='{%url 'addmaterial' course.course_id 'question' %}';">Add Paper</button>
+                  {%endif%}
                 </div>
               </div>
             </div>

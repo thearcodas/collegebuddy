@@ -10,8 +10,10 @@
 {%if is_admin %}
 <h1>Admins don't have Schedules</h1>
 {% else %}
-<div class="row justify-content-center">
+<div class="row">
     <div class="col-10">
-        <img src="{{schedule.image.url}}" width="700px" alt="{{schedule.stream}} {{schedule.name}}" >
+        <center><img src="{{schedule.image.url}}" width="700px" alt="{{schedule.stream}} {{schedule.name}}" ></center>
+    </div>
+  </div>
   {%endif%}
 {% endblock body %}

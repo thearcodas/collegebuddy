@@ -60,11 +60,17 @@
             <td>{{profile.department}}</td>
         </tr>
         <tr>
-            <th>Highest Qualification</th>
+            <th>Designation: </th>
+            <td>{{profile.designation}}</td>
+        </tr>
+        <tr>
+            <th>Highest Qualification: </th>
             <td>{{profile.highest_qualification}}</td>
         </tr>
         <tr>
             <th>Courses Taught:</th>
+        </tr>
+        <tr>
             <td>
                 <ul>
                     {% for course in profile.courses_taught.all %}

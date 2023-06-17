@@ -8,15 +8,15 @@
 
 {% block body %}
 <!--accordian-->
-<div class="accordion accordion-wrap" id="announcementsAccordion">
+<div class="accordion" id="announcementsAccordion">
     {% for announcement in announcements %}
     <div class="accordion-item">
       <h2 class="accordion-header ">
-        <button class="accordion-button collapsed bg-accordion" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ announcement.id }}" aria-expanded="false" aria-controls="collapse{{ announcement.id }}">
+        <button class="accordion-button collapsed bg-accordion text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ announcement.id }}" aria-expanded="false" aria-controls="collapse{{ announcement.id }}">
           {{ announcement.announcement_title }}
         </button>
       </h2>
-      <div id="collapse{{ announcement.id }}" class="accordion-collapse collapse bg-accordion" aria-labelledby="announcement{{ announcement.id }}" data-bs-parent="#announcementsAccordion">
+      <div id="collapse{{ announcement.id }}" class="accordion-collapse collapse bg-accordion text-white" aria-labelledby="announcement{{ announcement.id }}" data-bs-parent="#announcementsAccordion">
         <div class="accordion-body">
           <p>{{ announcement.announcement_body }}</p><br><br>
           <p>Posted by <b>{{ announcement.department }} department</b> on <b>{{ announcement.date_published|date:"F d, Y" }}</b></p>

@@ -79,13 +79,13 @@ class Attendance(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='attendance')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='course_attendance')
     date = models.DateField()
-    present = models.BooleanField(default=False)
-
+    weightage = models.IntegerField(default=0)
+    total_weightage=models.IntegerField(default=0)
     class Meta:
         unique_together = ('student', 'course', 'date')
         
     def __str__(self):
-        return f'{self.student} - {self.course} - {self.date} - {self.present}'
+        return f'{self.student} - {self.course} - {self.date}'
 
 class Schedule(models.Model):
     stream= models.ForeignKey(Stream, on_delete=models.CASCADE, related_name='schedule_stream')

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block courses %}active{% endblock courses  %}
+
+{% block title%}Attendance{% endblock title %}
+
+{% block header%}UpdateAttendance{% endblock header %}
+
+{%block body%}
+<div class="container">
+    {%if not is_student%}
+    <form method="POST" >
+    {%csrf_token%}
+    <table>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label for="date">Date: </label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                  </div>
+                </td>
+                &nbsp&nbsp&nbsp
+                <td>
+                    <div class="form-group">
+                        <label for="total">Total Weightage: </label>
+                        <input type="text" class="form-control" id="total" name="total" required>
+                      </div>
+                    </td>
+        </tr>
+    </table>
+    <br>
+    <table class="table table-bordered">
+        <thead class="thead">
+        <tr>
+            <th>Students</th>
+            <th>Weightage</th>
+        </tr>
+    </thead>
+        {%for student in students%}
+        <tr>
+            <td>{{student.name}}</td>
+            <td>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="weight{{student.roll_no}}" name="weight{{student.roll_no}}" required>
+                  </div>
+            </td>
+        </tr>
+        {%endfor%}
+    </table>
+        <center><button type="submit" class="btn btn-light">Update Attendance</button></center>
+    </form>
+    {%else%}
+    <h2>{{message}}</h2>
+    {%endif%}
+    
+</div>
+{%endblock body%}

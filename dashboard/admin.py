@@ -24,7 +24,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'course', 'date', 'present')
+    list_display = ('student', 'course', 'date', 'weightage')
 
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):

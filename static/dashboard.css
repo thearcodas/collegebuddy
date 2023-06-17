@@ -9,6 +9,15 @@ body {
   background-color: #07011D;
 }
 
+.table{
+  background-color: #627C04;
+  color:white;
+}
+
+.thead{
+  background-color: #394802;
+}
+
 .feather {
   width: 16px;
   height: 16px;
@@ -233,6 +242,7 @@ body {
 .bg-accordion{
   background-color: #29106e !important;
 }
+
 
 
 /*profile*/
