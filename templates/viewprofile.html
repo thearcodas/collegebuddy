@@ -6,6 +6,18 @@
 
 {% block header%}Profile{% endblock header %}
 
+{% block search%}
+<form method="POST" action="viewprofile">
+    {% csrf_token %}
+    
+    <div class="d-flex">
+      <input type="text" class="form-control" id="id" name="id" placeholder="Enter Id/Roll" required>
+      <button type="submit" class="btn btn-send" ><span data-feather="search" class="align-text-bottom"></span></button>
+    </div>
+</center>
+  </form>
+{% endblock search %}
+
 {% block body %}
 <div class="container">
     <h3>{{message}}</h3>

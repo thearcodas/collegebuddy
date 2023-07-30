@@ -9,10 +9,12 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.dashboard,name='dashboard'),
     path('profile', views.profile,name='profile'),
-    path('profile/<str:id>',views.viewprofile,name='viewprofile'),
+    path('viewprofile/',views.encyclopedia,name='encyclopedia'),
+    path('viewprofile/<str:id>',views.viewprofile,name='viewprofile'),
     path('schedules', views.schedules,name='schedules'),
     path('announcement', views.announcement,name='announcement'),
     path('attendance/<str:code>', views.attendance,name='attendance'),
+    path('attendancedetails', views.attendancedetails,name='attendancedetails'),
     path('updateattendance/<str:code>', views.updateattendance,name='updateattendance'),
     path('courses', views.courses,name='courses'),
     path('course/<str:code>', views.coursedetails,name='coursedetails'),

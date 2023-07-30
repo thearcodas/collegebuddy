@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block courses %}active{% endblock courses  %}
+
+{% block title%}Attendance{% endblock title %}
+
+{% block header%}Attendance{% endblock header %}
+
+{%block body%}
+<div class="container">
+    <table class="table table-bordered ">
+        <thead class="thead">
+        <tr>
+            <th>Course Name</th>
+            <th>Percentage</th>
+        </tr>
+    </thead>
+        {%for course,attendance in attendances.items%}
+        <tr>
+            <td>{{course}}</td>
+            <td>{{attendance}}</td>
+            
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+{%endblock body%}

@@ -7,35 +7,40 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import *
-
-
-import os
-import openai
-from langchain.agents import *
-from langchain import LLMChain, SQLDatabase,SQLDatabaseChain
-from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
+from django.db.models import Count,Sum
 
 # Create your views here
 @login_required(login_url="login")
 def dashboard(request):
-    os.environ['OPENAI_API_KEY'] = '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'
-    db = SQLDatabase.from_uri("sqlite:///db.sqlite3")
-    llm = ChatOpenAI(temperature=0,model_name='gpt-3.5-turbo')
-    memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    db_chain = SQLDatabaseChain.from_llm(llm, db, verbose=True,memory=memory)
-    
-    if request.method == "POST":
-        question=request.POST.get('userInput')
-        try:
-            response= db_chain.run(question)
-        except openai.error.AuthenticationError as ae:
-            response= "Developers! Please check the API key or provide a new one!"
-        except Exception as e:
-           response= str(e)
-        return HttpResponse(response)
-
-    return render(request,'dashboard.html')
+    is_admin=False
+    is_prof=False
+    is_student=False
+    attendance=""
+    name=""
+    profile=""
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        is_student=True
+        profile = Student.objects.get(roll_no=request.user)
+        name=profile.name
+        at=Attendance.objects.filter(student=profile).aggregate(Sum('weightage'))
+        tat=Attendance.objects.filter(student=profile).aggregate(Sum('total_weightage'))
+        attendance=(at['weightage__sum']/tat['total_weightage__sum'])*100
+    elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
+        is_prof=True
+        profile = Professor.objects.get(professor_id=request.user)
+        name= profile.name
+    else:
+       is_admin=True
+       name='Admin'
+    context={   
+            'profile':profile,
+            'name':name,
+            'isadmin':is_admin,
+            'is_student':is_student,
+            'is_prof': is_prof,
+            'attendance': attendance
+             }
+    return render(request,'dashboard.html',context)
 
 def loginUser(request):
     if request.method == "POST":
@@ -150,23 +155,40 @@ def announcement(request):
             
     return render(request,'announcements.html',context)
 
+def encyclopedia(request):
+    profile=display=is_student=""
+    msg="Search for any student/professor"
+    context = {
+        'profile': profile,
+        'display': display,
+        'is_student': is_student,
+        'message': msg,
+    }
+    return render(request,'viewprofile.html',context)
+
 def viewprofile(request,id):
     #fetch the profiles
-    user=User.objects.get(username=id)
-    if Student.objects.filter(roll_no=user).exists():
-        profile = Student.objects.get(roll_no=user)
-        is_student=True
-        display=True
-        msg="Showing student's profile with roll "+id
-    elif Professor.objects.filter(professor_id=user).exists():
-        profile = Professor.objects.get(professor_id=user)
-        is_student = False
-        display=True
-        msg="Showing professor's profile with Id "+id
-    else:
-        display=False
-        msg='No profiles are present with this Id'
-
+    profile=display=is_student=""
+    if request.method == "POST":
+        id1=request.POST.get('id')
+        return redirect(viewprofile,id=id1)
+    try:
+        user=User.objects.get(username=id)
+        if Student.objects.filter(roll_no=user).exists():
+            profile = Student.objects.get(roll_no=user)
+            is_student=True
+            display=True
+            msg="Showing student's profile with roll "+id
+        elif Professor.objects.filter(professor_id=user).exists():
+            profile = Professor.objects.get(professor_id=user)
+            is_student = False
+            display=True
+            msg="Showing professor's profile with Id "+id
+        else:
+            display=False
+            msg='No profiles are present with this Id'
+    except:
+        msg="No User with this ID/roll"
     # Display the current profile information
     context = {
         'profile': profile,
@@ -302,3 +324,36 @@ def updateattendance(request,code):
     }
     return render(request,'updateattendance.html',context)
     
+@login_required(login_url="login")
+def attendancedetails(request):
+    attendances={}
+    tat=at={}
+    if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
+        
+        profile = Student.objects.get(roll_no=request.user)
+        courses= profile.enrolled_courses
+        for course in courses.all():
+            name= course.course_id+'-'+course.name
+            at=Attendance.objects.filter(student=profile,course=course).aggregate(Sum('weightage'))
+            tat=Attendance.objects.filter(student=profile,course=course).aggregate(Sum('total_weightage'))
+            try:
+                attendances[name]=(at['weightage__sum']/tat['total_weightage__sum'])*100
+            except:
+                attendances[name]=0
+    elif request.user.is_authenticated and request.user.groups.filter(name='Professor').exists():
+        
+        profile = Professor.objects.get(professor_id=request.user)
+        courses= profile.courses_taught
+        for course in courses.all():
+            name= course.course_id+'-'+course.name
+            at=Attendance.objects.filter(course=course).aggregate(Sum('weightage'))
+            tat=Attendance.objects.filter(course=course).aggregate(Sum('total_weightage'))
+            try:
+                attendances[name]=(at['weightage__sum']/tat['total_weightage__sum'])*100
+            except:
+                attendances[name]=0
+    context={
+        
+        'attendances': attendances,
+    }
+    return render(request,'attendancedetails.html',context)

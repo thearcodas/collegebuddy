@@ -22,6 +22,6 @@ admin.site.site_title="Collegebuddy admin portal"
 admin.site.index_title="Welcome to Collegebuddy control panel"
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls,name="admin"),
     path('', include('dashboard.urls')),
 ]
