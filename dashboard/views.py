@@ -53,6 +53,7 @@ def loginUser(request):
             return redirect("/")
         else:
             # No backend authenticated the credentials
+            messages.info(request, 'Invalid Id or Password!')
             return redirect("/login")
     return render(request,'login.html')
 
@@ -128,6 +129,7 @@ def schedules(request):
 @login_required(login_url="login")
 def announcement(request):
     #Authentication_Status
+    is_admin=False
     if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
         student = Student.objects.get(roll_no=request.user)
         announcements = Announcement.objects.filter(department=student.stream.department) 
@@ -138,6 +140,7 @@ def announcement(request):
         is_student = False
     elif request.user.is_authenticated:
        announcements = Announcement.objects.all
+       is_admin=True
        is_student = False
     else:
         return redirect('login')
@@ -150,8 +153,12 @@ def announcement(request):
     
     if not is_student:
         if request.method == 'POST':
-            new_announcement= Announcement.objects.create(department=professor.department,id=request.POST['a_id'],announcement_title=request.POST['a_title'],announcement_body=request.POST['a_body'])
-            new_announcement.save()  
+            if is_admin:
+                new_announcement= Announcement.objects.create(department=Department.objects.get(name="Admin"),id=request.POST['a_id'],announcement_title=request.POST['a_title'],announcement_body=request.POST['a_body'])
+                new_announcement.save()  
+            else:
+                new_announcement= Announcement.objects.create(department=professor.department,id=request.POST['a_id'],announcement_title=request.POST['a_title'],announcement_body=request.POST['a_body'])
+                new_announcement.save()  
             
     return render(request,'announcements.html',context)
 
