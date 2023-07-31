@@ -287,13 +287,20 @@ def addmaterial(request,code,material):
 
 @login_required(login_url="login")
 def attendance(request,code):
-    attendance=message=""
+    attendance={}
+    message=""
     if request.user.is_authenticated and request.user.groups.filter(name='Student').exists():
         student = Student.objects.get(roll_no=request.user)
         attendance= Attendance.objects.filter(course= Course.objects.get(course_id=code),student=student)
         is_student=True
     else:
-        message='You guys dont have attendance!'
+        #message='You guys dont have attendance!'
+        at=Attendance.objects.values('student').filter(course=Course.objects.get(course_id=code)).annotate(Sum('weightage'),Sum('total_weightage')).order_by()
+        for a in at:
+            attendance[Student.objects.get(id=a['student']).name]=(a['weightage__sum']/a['total_weightage__sum'])*100
+        if not attendance:
+            message="No attendance record yet"    
+        print(attendance)
         is_student=False
     
     context={

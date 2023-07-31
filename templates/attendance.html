@@ -26,7 +26,24 @@
         {%endfor%}
     </table>
     {%else%}
+    {%if message%}
     <h2>{{message}}</h2>
+    {%else%}
+    <table class="table table-bordered ">
+        <thead class="thead">
+        <tr>
+            <th>Name</th>
+            <th>Percentage</th>
+        </tr>
+    </thead>
+        {%for name,attendance in attendances.items%}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{attendance}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+    {%endif%}
     <center><button class="btn btn-light" onclick="location.href='{%url 'updateattendance' code %}';">Update Attendance</button></center>
     {%endif%}
 </div>

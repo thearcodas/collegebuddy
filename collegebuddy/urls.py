@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.contrib.auth import views as auth_views 
 
 admin.site.site_header="Collegebuddy Admin"
 admin.site.site_title="Collegebuddy admin portal"
 admin.site.index_title="Welcome to Collegebuddy control panel"
 
 urlpatterns = [
+    path('admin/login/', auth_views.LoginView.as_view(template_name='login.html')), 
     path('admin/', admin.site.urls,name="admin"),
     path('', include('dashboard.urls')),
 ]

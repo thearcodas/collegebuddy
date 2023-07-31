@@ -146,3 +146,5 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+LOGIN_REDIRECT_URL = '/login'
